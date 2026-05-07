@@ -59,7 +59,7 @@ items will sit invisibly in the slot unless they ship their own
 
 The body-part anchored rendering technique and the pendulum physics
 shape are adapted from
-[ImmersiveLanterns](https://github.com/TonimatasDEV/ImmersiveLanterns)
+[ImmersiveLanterns](https://modrinth.com/mod/immersive-lanterns)
 by Toni — go check it out, it's a much fuller implementation.
 
 ## License
