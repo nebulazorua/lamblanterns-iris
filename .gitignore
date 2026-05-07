@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+build/
+out/
+bin/
+classes/
+src/generated/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.metadata/
+.factorypath
+eclipse-bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Reference sources, not part of this mod
+LambDynamicLights/
+
+# Local override
+run/
+runs/
+*.log
+
+# Local Claude Code state
+.claude/

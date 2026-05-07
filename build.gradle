@@ -1,0 +1,147 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.78'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = '2024.11.17'
+        minecraftVersion = '1.21.1'
+    }
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+        }
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+        }
+        data {
+            data()
+            programArguments.addAll '--mod', mod_id, '--all',
+                    '--output', file('src/generated/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven {
+        name = 'TheIllusiveC4 (Curios)'
+        url = 'https://maven.theillusivec4.top/'
+    }
+    // LDL and yumi-mc-foundation publish multi-variant Gradle module metadata
+    // (mojmap/intermediary classifiers) that Gradle can't disambiguate in a
+    // NeoForge dev environment. Resolve them by jar artifact only via
+    // exclusiveContent + metadataSources.artifact().
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Gegy (LambDynamicLights)'
+                url = 'https://maven.gegy.dev'
+                metadataSources { artifact() }
+            }
+        }
+        filter { includeGroup 'dev.lambdaurora.lambdynamiclights' }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Maven Central (yumi mc, artifact-only)'
+                url = 'https://repo1.maven.org/maven2/'
+                metadataSources { artifact() }
+            }
+        }
+        filter { includeGroup 'dev.yumi.mc.core' }
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    // Compile-only API surface for the optional LambDynamicLights integration class.
+    compileOnly 'dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:4.8.8+1.21.1:mojmap@jar'
+    compileOnly('dev.yumi.mc.core:yumi-mc-foundation:1.0.0-alpha.16+1.21.1:mojmap@jar') { transitive = false }
+    compileOnly('dev.yumi.commons:yumi-commons-event:1.0.0-alpha.12')          { transitive = false }
+    compileOnly('dev.yumi.commons:yumi-commons-collections:1.0.0-alpha.12')    { transitive = false }
+    compileOnly('dev.yumi.commons:yumi-commons-core:1.0.0-alpha.12')           { transitive = false }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version       : minecraft_version,
+            minecraft_version_range : minecraft_version_range,
+            neo_version             : neo_version,
+            neo_version_range       : neo_version_range,
+            loader_version_range    : loader_version_range,
+            mod_id                  : mod_id,
+            mod_name                : mod_name,
+            mod_license             : mod_license,
+            mod_version             : mod_version,
+            mod_authors             : mod_authors,
+            mod_description         : mod_description
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+java {
+    withSourcesJar()
+}
+
+tasks.withType(Jar).configureEach {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : mod_name,
+                'Implementation-Version'  : mod_version,
+                'Implementation-Vendor'   : mod_authors
+        ])
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

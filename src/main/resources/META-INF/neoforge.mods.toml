@@ -1,0 +1,48 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+issueTrackerURL = ""
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "${mod_authors}"
+logoFile = "icon.png"
+description = '''${mod_description}'''
+
+# --- Required dependencies ---
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "curios"
+type = "required"
+versionRange = "[9.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# --- Optional client-side companion ---
+[[dependencies.${mod_id}]]
+modId = "lambdynlights"
+type = "optional"
+versionRange = "[3.0.0,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+# --- Yumi entrypoint registration (read by LambDynamicLights via Yumi MC Core) ---
+# Only invoked when LambDynamicLights is installed; class is loaded lazily.
+[modproperties.${mod_id}]
+"yumi:entrypoints"."lambdynlights:initializer" = ["me.f0x.lamblanterns.compat.ldl.LambLanternsLdlInit"]
+
