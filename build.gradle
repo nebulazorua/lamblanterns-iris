@@ -76,6 +76,17 @@ repositories {
     exclusiveContent {
         forRepository {
             maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
                 name = 'Maven Central (yumi mc, artifact-only)'
                 url = 'https://repo1.maven.org/maven2/'
                 metadataSources { artifact() }
@@ -94,6 +105,13 @@ dependencies {
     compileOnly('dev.yumi.commons:yumi-commons-event:1.0.0-alpha.12')          { transitive = false }
     compileOnly('dev.yumi.commons:yumi-commons-collections:1.0.0-alpha.12')    { transitive = false }
     compileOnly('dev.yumi.commons:yumi-commons-core:1.0.0-alpha.12')           { transitive = false }
+
+    runtimeOnly("org.anarres:jcpp:1.4.14")
+    runtimeOnly("org.antlr:antlr4-runtime:4.13.1")
+    runtimeOnly("io.github.douira:glsl-transformer:2.0.1")
+
+    implementation "maven.modrinth:iris:1.8.12+1.21.1-neoforge"
+    implementation "maven.modrinth:sodium:mc1.21.1-0.6.13-neoforge"
 }
 
 tasks.named('processResources', ProcessResources).configure {

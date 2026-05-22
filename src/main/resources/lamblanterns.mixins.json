@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "me.f0x.lamblanterns.mixins",
+  "plugin": "me.f0x.lamblanterns.MixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "client": [
+    "IrisMixin"
+  ]
+}
