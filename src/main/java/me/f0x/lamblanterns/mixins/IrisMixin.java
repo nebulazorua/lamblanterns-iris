@@ -18,7 +18,6 @@ public class IrisMixin {
     private ItemStack lamblanterns$fakeOffhandForLighting(LocalPlayer instance, InteractionHand hand){
         if(hand == InteractionHand.OFF_HAND) {
             var inv = CuriosApi.getCuriosInventory(instance).orElse(null);
-            LambLanterns.LOGGER.info("fuck {}", inv);
             if (inv == null) return instance.getItemInHand(hand);
             ICurioStacksHandler handler = inv.getCurios().get("lantern");
             if (handler == null) return instance.getItemInHand(hand);
